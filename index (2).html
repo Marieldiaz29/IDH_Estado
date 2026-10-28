@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IDH Estado: análisis del Índice de Desarrollo Humano</title>
+<meta name="description" content="Repositorio del proyecto IDH Estado: reportes, imagen del flujo, código y video explicativo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #14213d;
+    --ink-soft: #46526b;
+    --paper: #f6f8fb;
+    --card: #ffffff;
+    --line: #d9dfea;
+    --teal: #0b7a75;
+    --teal-dark: #085b57;
+    --gold: #f2b134;
+    --sky: #7fb7d9;
+    --head: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+    --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+  a { color: var(--teal-dark); }
+  a:focus-visible, button:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .wrap { width: min(1080px, 100% - 2.5rem); margin-inline: auto; }
+
+  /* Top bar */
+  .top { border-bottom: 1px solid var(--line); background: var(--card); }
+  .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4rem; }
+  .brand { font-family: var(--head); font-weight: 800; font-size: 1.25rem; text-decoration: none; color: var(--ink); letter-spacing: -0.01em; }
+  .top nav { display: flex; gap: 1.5rem; align-items: center; font-weight: 500; font-size: 0.95rem; }
+  .top nav a { color: var(--ink-soft); text-decoration: none; }
+  .top nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+  .top nav .gh { color: #fff; background: var(--ink); padding: 0.45rem 0.95rem; border-radius: 999px; }
+  .top nav .gh:hover { color: #fff; background: var(--teal-dark); text-decoration: none; }
+  @media (max-width: 640px) { .top nav a:not(.gh) { display: none; } }
+
+  /* Hero */
+  .hero { padding: clamp(3rem, 8vw, 6rem) 0 clamp(2.5rem, 6vw, 4rem); }
+  .hero h1 {
+    font-family: var(--head);
+    font-weight: 800;
+    font-size: clamp(3.4rem, 11vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin: 0 0 1.5rem;
+  }
+  .hero h1 span { display: block; font-weight: 500; font-size: 0.34em; letter-spacing: -0.01em; line-height: 1.15; margin-top: 0.7rem; color: var(--ink-soft); }
+  .hero p.lead { max-width: 38rem; font-size: 1.2rem; color: var(--ink-soft); margin: 0 0 2rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+  .btn {
+    display: inline-block; text-decoration: none; font-weight: 600;
+    padding: 0.8rem 1.35rem; border-radius: 10px; border: 2px solid var(--ink);
+    color: var(--ink); background: transparent;
+  }
+  .btn:hover { background: var(--ink); color: #fff; }
+  .btn.primary { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+  .btn.primary:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+  /* The scale: the one memorable element */
+  .scale { margin-top: clamp(2.5rem, 6vw, 4rem); }
+  .scale-bar { display: grid; grid-template-columns: 55fr 15fr 10fr 20fr; height: 3.2rem; border-radius: 6px; overflow: hidden; }
+  .scale-bar div { display: flex; align-items: flex-end; padding: 0 0.7rem 0.5rem; font-weight: 600; font-size: 0.85rem; color: var(--ink); }
+  .b1 { background: #cfe3f1; }
+  .b2 { background: var(--sky); }
+  .b3 { background: #3d93a0; color: #fff !important; }
+  .b4 { background: var(--teal-dark); color: #fff !important; }
+  .scale-ticks { position: relative; height: 1.6rem; font-size: 0.8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .scale-ticks span { position: absolute; top: 0.35rem; transform: translateX(-50%); }
+  .scale-ticks span::before { content: ""; position: absolute; left: 50%; top: -0.35rem; width: 1px; height: 0.35rem; background: var(--ink-soft); }
+  .scale-ticks span:first-child { transform: none; } .scale-ticks span:first-child::before { left: 0; }
+  .scale-ticks span:last-child { transform: translateX(-100%); } .scale-ticks span:last-child::before { left: 100%; }
+  .scale-note { margin: 0.4rem 0 0; font-size: 0.95rem; color: var(--ink-soft); max-width: 44rem; }
+  @media (max-width: 640px) { .scale-bar div { font-size: 0.7rem; padding: 0 0.35rem 0.4rem; } }
+
+  /* Sections */
+  section.block { padding: clamp(2.5rem, 6vw, 4.5rem) 0; border-top: 1px solid var(--line); }
+  h2 { font-family: var(--head); font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.5rem); letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 0.6rem; }
+  .sub { color: var(--ink-soft); margin: 0 0 2rem; max-width: 40rem; }
+
+  /* File list */
+  .files { list-style: none; margin: 0; padding: 0; background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .files li + li { border-top: 1px solid var(--line); }
+  .files a {
+    display: grid; grid-template-columns: 4.2rem 1fr auto; gap: 1rem; align-items: center;
+    padding: 1.1rem 1.25rem; text-decoration: none; color: var(--ink);
+  }
+  .files a:hover { background: #eef5f8; }
+  .files a:hover .name { text-decoration: underline; text-underline-offset: 4px; }
+  .ext { font-family: var(--head); font-weight: 700; font-size: 0.85rem; text-align: center; padding: 0.35rem 0; border-radius: 6px; color: #fff; }
+  .ext.pdf { background: #b3402a; }
+  .ext.png { background: var(--teal); }
+  .ext.json { background: var(--ink); }
+  .name { font-weight: 600; word-break: break-word; }
+  .desc { display: block; font-weight: 400; font-size: 0.95rem; color: var(--ink-soft); }
+  .open { font-weight: 600; font-size: 0.9rem; color: var(--teal-dark); }
+  @media (max-width: 560px) { .files a { grid-template-columns: 3.4rem 1fr; } .open { display: none; } }
+
+  /* Image */
+  figure { margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1rem; }
+  figure img { display: block; width: 100%; height: auto; border-radius: 6px; }
+  figcaption { margin-top: 0.8rem; font-size: 0.95rem; color: var(--ink-soft); }
+
+  /* Video */
+  .video { position: relative; aspect-ratio: 16 / 9; background: var(--ink); border-radius: 12px; overflow: hidden; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video-links { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; color: var(--ink-soft); font-size: 0.95rem; }
+
+  footer { border-top: 1px solid var(--line); background: var(--card); padding: 2rem 0; font-size: 0.95rem; color: var(--ink-soft); }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem; }
+
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio">IDH Estado</a>
+    <nav aria-label="Principal">
+      <a href="#documentos">Documentos</a>
+      <a href="#flujo">Flujo del proyecto</a>
+      <a href="#video">Video</a>
+      <a class="gh" href="https://github.com/Marieldiaz29/IDH_Estado" target="_blank" rel="noopener noreferrer">Ver en GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero">
+    <div class="wrap">
+      <h1>IDH Estado<span>Análisis del Índice de Desarrollo Humano a nivel estatal</span></h1>
+      <p class="lead">Aquí encuentras el reporte de resultados, el reporte técnico, el código del flujo y un video que explica el proyecto paso a paso.</p>
+      <div class="actions">
+        <a class="btn primary" href="#video">Ver el video</a>
+        <a class="btn" href="#documentos">Abrir los reportes</a>
+      </div>
+
+      <div class="scale" role="img" aria-label="Escala del IDH de 0 a 1: bajo hasta 0.549, medio de 0.550 a 0.699, alto de 0.700 a 0.799 y muy alto desde 0.800">
+        <div class="scale-bar">
+          <div class="b1">Bajo</div>
+          <div class="b2">Medio</div>
+          <div class="b3">Alto</div>
+          <div class="b4">Muy alto</div>
+        </div>
+        <div class="scale-ticks" aria-hidden="true">
+          <span style="left:0">0</span>
+          <span style="left:55%">0.550</span>
+          <span style="left:70%">0.700</span>
+          <span style="left:80%">0.800</span>
+          <span style="left:100%">1</span>
+        </div>
+        <p class="scale-note">El IDH va de 0 a 1 y se agrupa en cuatro niveles. Así se leen los resultados del proyecto.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="documentos">
+    <div class="wrap">
+      <h2>Documentos del proyecto</h2>
+      <p class="sub">Cada archivo se abre desde aquí.</p>
+      <ul class="files">
+        <li>
+          <a href="Reporte_Resultados_IDH.pdf" target="_blank" rel="noopener">
+            <span class="ext pdf">PDF</span>
+            <span class="name">Reporte de resultados<span class="desc">Lo que arrojó el análisis del IDH</span></span>
+            <span class="open">Abrir</span>
+          </a>
+        </li>
+        <li>
+          <a href="Reporte_Tecnico_IDH.pdf" target="_blank" rel="noopener">
+            <span class="ext pdf">PDF</span>
+            <span class="name">Reporte técnico<span class="desc">Cómo está construido el proyecto</span></span>
+            <span class="open">Abrir</span>
+          </a>
+        </li>
+        <li>
+          <a href="IDH_Estado.png" target="_blank" rel="noopener">
+            <span class="ext png">PNG</span>
+            <span class="name">Imagen del flujo<span class="desc">Diagrama del proyecto</span></span>
+            <span class="open">Abrir</span>
+          </a>
+        </li>
+        <li>
+          <a href="IDH_Estado.blueprint.json" target="_blank" rel="noopener">
+            <span class="ext json">JSON</span>
+            <span class="name">IDH_Estado.blueprint.json<span class="desc">Código del flujo</span></span>
+            <span class="open">Abrir</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block" id="flujo">
+    <div class="wrap">
+      <h2>Flujo del proyecto</h2>
+      <p class="sub">Esta es la imagen incluida en el repositorio.</p>
+      <figure>
+        <img src="IDH_Estado.png" alt="Diagrama del flujo del proyecto IDH Estado" loading="lazy">
+        <figcaption>Toca o haz clic en “Imagen del flujo” en la lista de documentos para verla en tamaño completo.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="block" id="video">
+    <div class="wrap">
+      <h2>Video explicativo</h2>
+      <p class="sub">El recorrido completo del proyecto, en video.</p>
+      <div class="video">
+        <iframe src="https://www.youtube.com/embed/q_a7PZglXGo" title="Video explicativo del proyecto IDH Estado" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+      <p class="video-links">
+        Si el video no se muestra, ábrelo en YouTube:
+        <a href="https://youtu.be/q_a7PZglXGo" target="_blank" rel="noopener noreferrer">youtu.be/q_a7PZglXGo</a>
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>IDH Estado, proyecto de Marieldiaz29</span>
+    <a href="https://github.com/Marieldiaz29/IDH_Estado" target="_blank" rel="noopener noreferrer">Repositorio en GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>
